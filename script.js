@@ -14,11 +14,11 @@ const catalogos = {
       servicos: [
         {
           nome: "Lavação convencional",
-          precos: { Pequeno: 70, "Médio": 80, Grande: 100 }
+          precos: { Pequeno: 70, Médio: 80, Grande: 100 }
         },
         {
           nome: "Lavação detalhada",
-          precos: { Pequeno: 130, "Médio": 170, Grande: 230 }
+          precos: { Pequeno: 130, Médio: 170, Grande: 230 }
         }
       ]
     },
@@ -27,15 +27,15 @@ const catalogos = {
       servicos: [
         {
           nome: "Polimento comercial",
-          precos: { Pequeno: 400, "Médio": 500, Grande: 700 }
+          precos: { Pequeno: 400, Médio: 500, Grande: 700 }
         },
         {
           nome: "Polimento técnico",
-          precos: { Pequeno: 900, "Médio": 1000, Grande: 1200 }
+          precos: { Pequeno: 900, Médio: 1000, Grande: 1200 }
         },
         {
           nome: "Revitalização de pintura",
-          precos: { Pequeno: 130, "Médio": 180, Grande: 230 }
+          precos: { Pequeno: 130, Médio: 180, Grande: 230 }
         }
       ]
     },
@@ -43,17 +43,15 @@ const catalogos = {
       secao: "Coating e proteção",
       servicos: [
         { nome: "Cera líquida", valor: 10 },
-        {
-          nome: "Coating de pintura",
-          vitrificadoresCarro: true
-        },
-        {
-          nome: "Coating de plásticos",
-          valor: ""
-        },
+        { nome: "Coating de pintura", vitrificadoresCarro: true },
+        { nome: "Coating de plásticos", valor: "" },
         { nome: "Enceramento premium em pasta", valor: 80 },
         { nome: "Selagem da pintura", valor: 80 },
         { nome: "Selagem de plásticos", valor: 80 },
+        {
+          nome: "Revitalização de plásticos internos e externos",
+          valor: 40
+        },
         {
           nome: "Tratamento de vidro — descontaminação, cristalização e hidrorepelência",
           valor: 200
@@ -63,15 +61,35 @@ const catalogos = {
     {
       secao: "Higienização",
       servicos: [
-        { nome: "Higienização interna completa", valor: 780 },
+        {
+          nome: "Higienização",
+          menu: [
+            {
+              nome: "Desmontagem e remontagem dos componentes internos",
+              valor: 150
+            },
+            {
+              nome: "Higienização interna completa",
+              valor: 400
+            },
+            {
+              nome: "Limpeza detalhada do assoalho",
+              valor: 150
+            },
+            {
+              nome: "Remoção do carpete do assoalho",
+              valor: 50
+            },
+            {
+              nome: "Higienização do teto",
+              valor: 70
+            }
+          ]
+        },
         { nome: "Higienização de bancos de tecido", valor: 250 },
         {
           nome: "Higienização de bancos de couro com condicionamento",
           valor: 300
-        },
-        {
-          nome: "Revitalização de plásticos internos e externos",
-          valor: 40
         }
       ]
     },
@@ -95,16 +113,8 @@ const catalogos = {
     {
       secao: "Lavação",
       servicos: [
-        {
-          nome: "Lavação convencional",
-          valor: 40,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Lavação detalhada",
-          valor: 100,
-          observacao: "Valor inicial; pode ser editado."
-        }
+        { nome: "Lavação convencional", valor: 40 },
+        { nome: "Lavação detalhada", valor: 100 }
       ]
     },
     {
@@ -112,19 +122,19 @@ const catalogos = {
       servicos: [
         {
           nome: "Polimento comercial",
-          precos: { Pequeno: 120, "Médio": 220, Grande: 250 },
+          precos: { Pequeno: 120, Médio: 220, Grande: 250 },
           categorias: {
             Pequeno: "Naked",
-            "Médio": "Carenada",
+            Médio: "Carenada",
             Grande: "Big trail"
           }
         },
         {
           nome: "Polimento técnico",
-          precos: { Pequeno: 230, "Médio": 330, Grande: 350 },
+          precos: { Pequeno: 230, Médio: 330, Grande: 350 },
           categorias: {
             Pequeno: "Naked",
-            "Médio": "Carenada",
+            Médio: "Carenada",
             Grande: "Big trail"
           }
         },
@@ -144,62 +154,25 @@ const catalogos = {
       servicos: [
         {
           nome: "Coating de pintura",
-          vitrificadoresMoto: {
-            "2 anos": 150,
-            "5 anos": 270
-          }
+          vitrificadoresMoto: { "2 anos": 150, "5 anos": 270 }
         },
         {
           nome: "Coating de plásticos",
-          vitrificadoresMoto: {
-            "2 anos": 120,
-            "5 anos": 240
-          }
+          vitrificadoresMoto: { "2 anos": 120, "5 anos": 240 }
         },
-        {
-          nome: "Coating de metais",
-          valor: 100,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Selagem da pintura",
-          valor: 30,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Selagem de plásticos",
-          valor: 30,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Cera líquida",
-          valor: 10
-        },
-        {
-          nome: "Cera em pasta premium",
-          valor: 30,
-          observacao: "Valor inicial do catálogo."
-        }
+        { nome: "Coating de metais", valor: 100 },
+        { nome: "Selagem da pintura", valor: 30 },
+        { nome: "Selagem de plásticos", valor: 30 },
+        { nome: "Cera líquida", valor: 10 },
+        { nome: "Cera em pasta premium", valor: 30 }
       ]
     },
     {
       secao: "Revitalização",
       servicos: [
-        {
-          nome: "Revitalização de pintura",
-          valor: 60,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Revitalização de plásticos",
-          valor: 15,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Restauração de plástico injetado",
-          valor: 150,
-          observacao: "Valor inicial do catálogo."
-        }
+        { nome: "Revitalização de pintura", valor: 60 },
+        { nome: "Revitalização de plásticos", valor: 15 },
+        { nome: "Restauração de plástico injetado", valor: 150 }
       ]
     },
     {
@@ -212,35 +185,15 @@ const catalogos = {
     {
       secao: "Motor e metais",
       servicos: [
-        {
-          nome: "Polimento de escape inox",
-          valor: 130,
-          observacao: "Valor inicial do catálogo."
-        },
+        { nome: "Polimento de escape inox", valor: 130 },
         {
           nome: "Aplicação de verniz de motor em partes metálicas",
           valor: 30
         },
-        {
-          nome: "Clareamento do motor",
-          valor: 80,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Clareamento de alças",
-          valor: 20,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Clareamento dos bacalhaus",
-          valor: 20,
-          observacao: "Valor inicial do catálogo."
-        },
-        {
-          nome: "Amenização de ferrugem",
-          valor: 50,
-          observacao: "Valor inicial do catálogo."
-        }
+        { nome: "Clareamento do motor", valor: 80 },
+        { nome: "Clareamento de alças", valor: 20 },
+        { nome: "Clareamento dos bacalhaus", valor: 20 },
+        { nome: "Amenização de ferrugem", valor: 50 }
       ]
     }
   ]
@@ -263,8 +216,8 @@ function obterPreco(servico) {
 
 function obterPrecoVitrificadorCarro(duracao) {
   const precos = {
-    "2 anos": { Pequeno: 400, "Médio": 500, Grande: 600 },
-    "5 anos": { Pequeno: 700, "Médio": 800, Grande: 900 }
+    "2 anos": { Pequeno: 400, Médio: 500, Grande: 600 },
+    "5 anos": { Pequeno: 700, Médio: 800, Grande: 900 }
   };
 
   return precos[duracao]?.[campoPorteVeiculo.value] ?? "";
@@ -310,7 +263,6 @@ function criarSeletorDuracao(servico, id) {
   });
 
   seletorDuracao.id = `${id}-duracao`;
-
   return seletorDuracao;
 }
 
@@ -324,6 +276,29 @@ function obterPrecoCoating(servico, duracao) {
   }
 
   return "";
+}
+
+function criarLinhaOpcao(servico, id) {
+  const linha = document.createElement("div");
+  linha.className = "servico-opcao";
+  linha.dataset.nome = servico.nome;
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "checkbox-opcao-servico";
+  checkbox.id = `${id}-opcao-${contadorIds++}`;
+  checkbox.setAttribute("aria-label", `Incluir ${servico.nome}`);
+  checkbox.addEventListener("change", atualizarOrcamento);
+
+  const label = document.createElement("label");
+  label.className = "servico-nome";
+  label.htmlFor = checkbox.id;
+  label.textContent = servico.nome;
+
+  const campoValor = criarCampoValor(servico.nome, servico.valor ?? "");
+
+  linha.append(checkbox, label, campoValor);
+  return linha;
 }
 
 function criarLinhaServico(servico, opcoes = {}) {
@@ -352,7 +327,29 @@ function criarLinhaServico(servico, opcoes = {}) {
 
   linha.append(checkbox, label);
 
-  if (servico.vitrificadoresCarro || servico.vitrificadoresMoto) {
+  if (servico.menu) {
+    const menu = document.createElement("div");
+    menu.className = "opcoes-polimento-motor";
+    menu.hidden = !checkbox.checked;
+
+    servico.menu.forEach(item => {
+      menu.appendChild(criarLinhaOpcao(item, id));
+    });
+
+    checkbox.addEventListener("change", () => {
+      menu.hidden = !checkbox.checked;
+
+      if (!checkbox.checked) {
+        menu.querySelectorAll(".checkbox-opcao-servico").forEach(item => {
+          item.checked = false;
+        });
+      }
+
+      atualizarOrcamento();
+    });
+
+    linha.appendChild(menu);
+  } else if (servico.vitrificadoresCarro || servico.vitrificadoresMoto) {
     const seletorDuracao = criarSeletorDuracao(servico, id);
     const campoValor = criarCampoValor(
       servico.nome,
@@ -360,19 +357,13 @@ function criarLinhaServico(servico, opcoes = {}) {
     );
 
     seletorDuracao.addEventListener("change", () => {
-      campoValor.value = obterPrecoCoating(
-        servico,
-        seletorDuracao.value
-      );
+      campoValor.value = obterPrecoCoating(servico, seletorDuracao.value);
       atualizarOrcamento();
     });
 
     if (servico.vitrificadoresCarro) {
       campoPorteVeiculo.addEventListener("change", () => {
-        campoValor.value = obterPrecoCoating(
-          servico,
-          seletorDuracao.value
-        );
+        campoValor.value = obterPrecoCoating(servico, seletorDuracao.value);
         atualizarOrcamento();
       });
     }
@@ -380,47 +371,23 @@ function criarLinhaServico(servico, opcoes = {}) {
     checkbox.addEventListener("change", atualizarOrcamento);
     linha.append(seletorDuracao, campoValor);
   } else if (servico.opcoes) {
-    const campoVazio = document.createElement("span");
-    linha.appendChild(campoVazio);
-
     const listaOpcoes = document.createElement("div");
     listaOpcoes.className = "opcoes-polimento-motor";
     listaOpcoes.hidden = !checkbox.checked;
 
     servico.opcoes.forEach(opcao => {
-      const linhaOpcao = document.createElement("div");
-      linhaOpcao.className = "servico-opcao";
-      linhaOpcao.dataset.nome = `${servico.nome} — ${opcao.nome}`;
-
-      const checkboxOpcao = document.createElement("input");
-      checkboxOpcao.type = "checkbox";
-      checkboxOpcao.className = "checkbox-opcao-servico";
-      checkboxOpcao.id = `${id}-opcao-${contadorIds++}`;
-      checkboxOpcao.setAttribute("aria-label", `Incluir ${opcao.nome}`);
-
-      const labelOpcao = document.createElement("label");
-      labelOpcao.className = "servico-nome";
-      labelOpcao.htmlFor = checkboxOpcao.id;
-      labelOpcao.textContent = opcao.nome;
-
-      const campoValorOpcao = criarCampoValor(
-        `${servico.nome} — ${opcao.nome}`,
-        opcao.valor
-      );
-
-      checkboxOpcao.addEventListener("change", atualizarOrcamento);
-
-      linhaOpcao.append(
-        checkboxOpcao,
-        labelOpcao,
-        campoValorOpcao
-      );
-
-      listaOpcoes.appendChild(linhaOpcao);
+      listaOpcoes.appendChild(criarLinhaOpcao(opcao, id));
     });
 
     checkbox.addEventListener("change", () => {
       listaOpcoes.hidden = !checkbox.checked;
+
+      if (!checkbox.checked) {
+        listaOpcoes.querySelectorAll(".checkbox-opcao-servico").forEach(item => {
+          item.checked = false;
+        });
+      }
+
       atualizarOrcamento();
     });
 
@@ -428,20 +395,11 @@ function criarLinhaServico(servico, opcoes = {}) {
   } else {
     const campoValor = criarCampoValor(
       servico.nome,
-      opcoes.personalizado
-        ? servico.valor || ""
-        : obterPreco(servico)
+      opcoes.personalizado ? servico.valor || "" : obterPreco(servico)
     );
 
     linha.appendChild(campoValor);
     checkbox.addEventListener("change", atualizarOrcamento);
-  }
-
-  if (servico.observacao) {
-    const observacao = document.createElement("small");
-    observacao.className = "observacao-servico";
-    observacao.textContent = servico.observacao;
-    linha.appendChild(observacao);
   }
 
   if (servico.categorias && campoPorteVeiculo.value) {
@@ -469,9 +427,9 @@ function salvarServicosPersonalizadosVisiveis() {
       if (!servico) return;
 
       servico.selecionado =
-        linha.querySelector(".checkbox-servico").checked;
+        linha.querySelector(":scope > .checkbox-servico").checked;
 
-      const campoValor = linha.querySelector(".valor-servico");
+      const campoValor = linha.querySelector(":scope > .valor-servico");
       servico.valor = campoValor ? campoValor.value : "";
     });
 }
@@ -503,10 +461,7 @@ function carregarServicos() {
           : secao.secao;
 
         criarTituloSecao(titulo);
-
-        secao.servicos.forEach(servico => {
-          criarLinhaServico(servico);
-        });
+        secao.servicos.forEach(servico => criarLinhaServico(servico));
       });
     });
   }
@@ -567,10 +522,7 @@ function atualizarOrcamento() {
   }
 
   listaServicos.querySelectorAll(".servico").forEach(linha => {
-    const checkbox = linha.querySelector(
-      ":scope > .checkbox-servico"
-    );
-
+    const checkbox = linha.querySelector(":scope > .checkbox-servico");
     if (!checkbox) return;
 
     if (linha.dataset.personalizado === "true") {
@@ -581,9 +533,8 @@ function atualizarOrcamento() {
       if (servico) {
         servico.selecionado = checkbox.checked;
 
-        const campoValorPersonalizado = linha.querySelector(
-          ":scope > .valor-servico"
-        );
+        const campoValorPersonalizado =
+          linha.querySelector(":scope > .valor-servico");
 
         servico.valor = campoValorPersonalizado
           ? campoValorPersonalizado.value
@@ -593,56 +544,41 @@ function atualizarOrcamento() {
 
     if (!checkbox.checked) return;
 
-    const seletorDuracao = linha.querySelector(
-      ":scope > .duracao-vitrificador"
-    );
-
-    if (seletorDuracao) {
-      const campoValor = linha.querySelector(
-        ":scope > .valor-servico"
-      );
-      const valor = campoValor
-        ? Number(campoValor.value) || 0
-        : 0;
-
-      adicionarLinhaNaTabela(
-        `${linha.dataset.nome} — ${seletorDuracao.value}`,
-        valor
-      );
-
-      return;
-    }
-
-    const opcoes = linha.querySelector(
+    const menus = linha.querySelectorAll(
       ":scope > .opcoes-polimento-motor"
     );
 
-    if (opcoes) {
-      opcoes.querySelectorAll(".servico-opcao").forEach(linhaOpcao => {
-        const checkboxOpcao = linhaOpcao.querySelector(
-          ".checkbox-opcao-servico"
-        );
+    if (menus.length > 0) {
+      menus.forEach(menu => {
+        menu.querySelectorAll(".servico-opcao").forEach(linhaOpcao => {
+          const checkboxOpcao =
+            linhaOpcao.querySelector(".checkbox-opcao-servico");
 
-        if (!checkboxOpcao.checked) return;
+          if (!checkboxOpcao || !checkboxOpcao.checked) return;
 
-        const campoValor = linhaOpcao.querySelector(".valor-servico");
-        const valor = campoValor
-          ? Number(campoValor.value) || 0
-          : 0;
+          const campoValor = linhaOpcao.querySelector(".valor-servico");
+          const valor = campoValor ? Number(campoValor.value) || 0 : 0;
 
-        adicionarLinhaNaTabela(linhaOpcao.dataset.nome, valor);
+          adicionarLinhaNaTabela(linhaOpcao.dataset.nome, valor);
+        });
       });
 
       return;
     }
 
-    const campoValor = linha.querySelector(
-      ":scope > .valor-servico"
-    );
+    const seletorDuracao =
+      linha.querySelector(":scope > .duracao-vitrificador");
 
-    const valor = campoValor
-      ? Number(campoValor.value) || 0
-      : 0;
+    const campoValor = linha.querySelector(":scope > .valor-servico");
+    const valor = campoValor ? Number(campoValor.value) || 0 : 0;
+
+    if (seletorDuracao) {
+      adicionarLinhaNaTabela(
+        `${linha.dataset.nome} — ${seletorDuracao.value}`,
+        valor
+      );
+      return;
+    }
 
     adicionarLinhaNaTabela(linha.dataset.nome, valor);
   });
@@ -659,8 +595,7 @@ function atualizarOrcamento() {
     tabela.appendChild(linhaTabela);
   }
 
-  document.getElementById("saidaTotal").textContent =
-    formatarMoeda(total);
+  document.getElementById("saidaTotal").textContent = formatarMoeda(total);
 }
 
 campoTipoVeiculo.addEventListener("change", carregarServicos);
@@ -693,22 +628,18 @@ document.getElementById("adicionarServico").addEventListener("click", () => {
 
   campoNome.value = "";
   campoValor.value = "";
-
   carregarServicos();
 });
 
 document.getElementById("gerarPdf").addEventListener("click", () => {
-  const algumSelecionado = [
-    ...document.querySelectorAll(".checkbox-servico")
-  ].some(checkbox => checkbox.checked) ||
-    [
-      ...document.querySelectorAll(".checkbox-opcao-servico")
-    ].some(checkbox => checkbox.checked);
+  const algumSelecionado =
+    [...document.querySelectorAll(".checkbox-servico")]
+      .some(checkbox => checkbox.checked) ||
+    [...document.querySelectorAll(".checkbox-opcao-servico")]
+      .some(checkbox => checkbox.checked);
 
   if (!algumSelecionado) {
-    alert(
-      "Marque a caixa ao lado de pelo menos um serviço antes de gerar o PDF."
-    );
+    alert("Marque pelo menos um serviço antes de gerar o PDF.");
     return;
   }
 

@@ -1,10 +1,17 @@
 :root {
-  --azul: #1729a5;
-  --azul-escuro: #101a62;
-  --fundo: #f2f4f8;
-  --texto: #202536;
-  --cinza: #687083;
-  --borda: #dce0e8;
+  color-scheme: dark;
+  --fundo: #0b1120;
+  --painel: #111a2d;
+  --painel-secundario: #172238;
+  --campo: #0d1627;
+  --texto: #edf2fb;
+  --texto-suave: #a5b1c5;
+  --borda: #26344d;
+  --azul: #4f7cff;
+  --azul-claro: #7da0ff;
+  --azul-escuro: #172b55;
+  --verde: #39d98a;
+  --sombra: 0 20px 55px rgb(0 0 0 / 25%);
 }
 
 * {
@@ -13,44 +20,91 @@
 
 body {
   margin: 0;
-  padding: 24px 14px;
-  background: var(--fundo);
+  padding: 30px 16px 50px;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgb(49 83 160 / 20%), transparent 35%),
+    radial-gradient(ellipse at 95% 15%, rgb(25 102 106 / 12%), transparent 30%),
+    var(--fundo);
   color: var(--texto);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
 .app {
-  max-width: 850px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .painel,
 .orcamento {
-  background: white;
-  border-radius: 14px;
-  box-shadow: 0 6px 24px #17204412;
+  overflow: hidden;
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 18px;
+  box-shadow: var(--sombra);
 }
 
 .painel {
-  padding: 24px;
-  margin-bottom: 20px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+.topo-painel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.etiqueta {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--azul-claro);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
 }
 
 h1 {
   margin: 0 0 8px;
-  font-size: 25px;
+  font-size: clamp(24px, 4vw, 31px);
+  letter-spacing: -0.5px;
+}
+
+.indicador-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  color: var(--texto-suave);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.status-ponto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--verde);
+  box-shadow: 0 0 10px rgb(57 217 138 / 55%);
+}
+
+.introducao,
+.dica-servicos {
+  color: var(--texto-suave);
+  line-height: 1.6;
 }
 
 .introducao {
-  margin: 0 0 22px;
-  color: var(--cinza);
-  line-height: 1.5;
+  margin: 8px 0 24px;
+  font-size: 14px;
 }
 
 .campos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
 }
 
 .campo-completo {
@@ -59,8 +113,9 @@ h1 {
 
 .titulo-campo {
   display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
+  margin-bottom: 7px;
+  color: #dce5f5;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -68,70 +123,76 @@ input,
 select,
 textarea {
   width: 100%;
-  padding: 11px 12px;
+  min-height: 44px;
+  padding: 11px 13px;
   border: 1px solid var(--borda);
-  border-radius: 8px;
+  border-radius: 9px;
+  outline: none;
+  background: var(--campo);
   color: var(--texto);
   font: inherit;
-  background: white;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #73819a;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid #c8d0ff;
   border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgb(79 124 255 / 18%);
 }
 
 .painel h2 {
-  margin: 20px 0 5px;
-  font-size: 18px;
+  margin: 27px 0 5px;
+  font-size: 19px;
 }
 
 .dica-servicos {
-  margin: 0 0 12px;
-  color: var(--cinza);
+  margin: 0 0 14px;
   font-size: 13px;
-  line-height: 1.5;
 }
 
 .lista-servicos {
-  margin-top: 12px;
+  margin-top: 14px;
+  padding-top: 3px;
   border-top: 1px solid var(--borda);
 }
 
 .mensagem-inicial {
   margin: 0;
-  padding: 16px 4px;
-  color: var(--cinza);
+  padding: 18px 4px;
+  color: var(--texto-suave);
   font-size: 14px;
 }
 
 .titulo-secao-servicos {
-  margin: 22px 0 8px;
-  padding: 9px 11px;
-  border-radius: 7px;
-  background: #eef0ff;
-  color: var(--azul-escuro);
-  font-size: 15px;
-  font-weight: 700;
+  margin: 23px 0 8px;
+  padding: 10px 12px;
+  border: 1px solid rgb(79 124 255 / 18%);
+  border-radius: 8px;
+  background: rgb(79 124 255 / 10%);
+  color: #a9c0ff;
+  font-size: 14px;
+  font-weight: 750;
 }
 
 .titulo-secao-servicos:first-child {
-  margin-top: 12px;
+  margin-top: 13px;
 }
 
-/* Linhas principais dos serviços */
 .servico {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) 150px;
+  grid-template-columns: 28px minmax(0, 1fr) 145px;
   align-items: center;
   gap: 10px;
-  padding: 11px 0;
-  border-bottom: 1px solid #edf0f4;
+  padding: 12px 3px;
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
 }
 
-/* Linhas de vitrificação: serviço, duração e preço */
 .servico:has(> .duracao-vitrificador) {
   grid-template-columns: 28px minmax(0, 1fr) minmax(100px, 125px) minmax(110px, 140px);
 }
@@ -139,22 +200,21 @@ textarea:focus {
 .servico input[type="checkbox"],
 .servico-opcao input[type="checkbox"] {
   display: block;
-  width: 20px !important;
-  height: 20px !important;
-  min-width: 20px;
+  width: 19px !important;
+  min-width: 19px;
+  height: 19px;
+  min-height: 19px;
   margin: 0 auto;
   padding: 0;
-  border: 1px solid #7b8498;
-  border-radius: 4px;
-  background: white;
   accent-color: var(--azul);
   cursor: pointer;
 }
 
 .servico-nome {
   min-width: 0;
-  font-size: 15px;
-  line-height: 1.4;
+  color: #e2e9f5;
+  font-size: 14px;
+  line-height: 1.45;
   overflow-wrap: anywhere;
   cursor: pointer;
 }
@@ -165,22 +225,22 @@ textarea:focus {
   min-width: 0;
 }
 
-.servico > input[type="number"] {
+.servico > input[type="number"],
+.servico-opcao input[type="number"] {
   text-align: right;
 }
 
 .servico > .duracao-vitrificador {
-  padding: 10px 8px;
-  font-size: 14px;
+  padding: 9px 8px;
+  font-size: 13px;
 }
 
-/* Opções subordinadas ao serviço Polimento de motor */
 .opcoes-polimento-motor {
   grid-column: 1 / -1;
   width: 100%;
-  margin: 6px 0 2px;
+  margin: 7px 0 2px;
   padding: 8px 0 0 24px;
-  border-left: 2px solid #dce1ff;
+  border-left: 2px solid rgb(79 124 255 / 45%);
 }
 
 .opcoes-polimento-motor[hidden] {
@@ -189,12 +249,11 @@ textarea:focus {
 
 .servico-opcao {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) 150px;
+  grid-template-columns: 28px minmax(0, 1fr) 145px;
   align-items: center;
   gap: 10px;
-  width: 100%;
   padding: 9px 0;
-  border-bottom: 1px solid #edf0f4;
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
 }
 
 .servico-opcao:last-child {
@@ -202,17 +261,16 @@ textarea:focus {
 }
 
 .servico-opcao .servico-nome {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .servico-opcao input[type="number"] {
   width: 100%;
-  text-align: right;
 }
 
 .observacao-servico {
   grid-column: 2 / -1;
-  color: var(--cinza);
+  color: var(--texto-suave);
   font-size: 12px;
 }
 
@@ -220,83 +278,87 @@ textarea:focus {
   display: grid;
   grid-template-columns: 1fr 150px;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 button {
-  padding: 13px 18px;
-  border: 0;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 700;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
   cursor: pointer;
+  transition: transform 140ms ease, filter 140ms ease, background 140ms ease;
+}
+
+button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
 }
 
 .botao-adicionar {
   margin-top: 12px;
-  padding: 10px 13px;
-  color: var(--azul);
-  background: #eef0ff;
-}
-
-.botao-adicionar:hover {
-  background: #e2e5ff;
+  color: #b7c9ff;
+  background: rgb(79 124 255 / 12%);
+  border-color: rgb(79 124 255 / 24%);
 }
 
 .observacoes-label {
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 textarea {
+  min-height: 82px;
   resize: vertical;
 }
 
 .botoes {
   display: flex;
-  gap: 10px;
+  gap: 11px;
   margin-top: 20px;
 }
 
 .botao-pdf {
   flex: 1;
   color: white;
-  background: var(--azul);
-}
-
-.botao-pdf:hover {
-  background: var(--azul-escuro);
+  background: linear-gradient(135deg, #527eff, #315fe0);
+  box-shadow: 0 7px 18px rgb(49 95 224 / 25%);
 }
 
 .botao-limpar {
-  color: #434b5d;
-  background: #edf0f4;
+  color: #c1ccdc;
+  background: #202c40;
+  border-color: var(--borda);
 }
 
-.botao-limpar:hover {
-  background: #e1e4ea;
-}
-
-/* Prévia do orçamento */
 .orcamento {
-  padding: 38px;
+  padding: 34px;
+  background: #fff;
+  color: #202536;
+  border-color: #e0e5ed;
 }
 
 .cabecalho-orcamento {
   display: flex;
   align-items: center;
-  gap: 22px;
-  padding-bottom: 22px;
-  border-bottom: 3px solid var(--azul);
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 3px solid #315fe0;
 }
 
 .logo {
   display: block;
-  width: 250px;
-  height: 190px;
-  flex: 0 0 250px;
+  width: 170px;
+  height: 125px;
+  flex: 0 0 170px;
   object-fit: contain;
   background: transparent;
-  border-radius: 0;
 }
 
 .marca {
@@ -304,16 +366,16 @@ textarea {
 }
 
 .marca h2 {
-  margin: 0 0 7px;
-  color: var(--azul-escuro);
-  font-size: 23px;
+  margin: 0 0 6px;
+  color: #172b55;
+  font-size: 22px;
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
 
 .marca p {
   margin: 4px 0;
-  color: var(--cinza);
+  color: #687083;
   font-size: 13px;
 }
 
@@ -322,38 +384,39 @@ textarea {
   justify-content: space-between;
   align-items: end;
   gap: 15px;
-  margin: 24px 0 18px;
+  margin: 18px 0 14px;
 }
 
 .titulo-documento h1 {
-  color: var(--azul-escuro);
-  font-size: 24px;
+  margin: 0;
+  color: #172b55;
+  font-size: 23px;
   letter-spacing: 1px;
 }
 
 .numero-data {
-  color: var(--cinza);
-  font-size: 13px;
+  color: #687083;
+  font-size: 12px;
   text-align: right;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .secao-titulo {
-  margin: 22px 0 10px;
-  padding-bottom: 7px;
-  border-bottom: 1px solid var(--borda);
-  color: var(--azul-escuro);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  margin: 17px 0 9px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #dce0e8;
+  color: #172b55;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.7px;
   text-transform: uppercase;
 }
 
 .dados-cliente {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 9px 20px;
-  font-size: 14px;
+  gap: 7px 18px;
+  font-size: 13px;
 }
 
 .dado b {
@@ -363,35 +426,37 @@ textarea {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 th {
-  padding: 10px;
+  padding: 9px;
   background: #f0f2fa;
-  color: var(--azul-escuro);
+  color: #172b55;
   text-align: left;
 }
 
 th:last-child,
 td:last-child {
+  width: 115px;
   text-align: right;
+  white-space: nowrap;
 }
 
 td {
-  padding: 11px 10px;
+  padding: 8px 9px;
   border-bottom: 1px solid #e9ebf0;
 }
 
 .sem-servicos {
-  padding: 16px 10px;
-  color: var(--cinza);
+  padding: 13px 10px;
+  color: #687083;
   text-align: center;
 }
 
 .totais {
-  width: min(100%, 300px);
-  margin: 18px 0 0 auto;
+  width: min(100%, 290px);
+  margin: 14px 0 0 auto;
 }
 
 .total-linha {
@@ -402,79 +467,75 @@ td {
 }
 
 .total-final {
-  margin-top: 6px;
-  padding: 12px;
+  margin-top: 5px;
+  padding: 10px 12px;
   border-radius: 7px;
-  background: var(--azul);
+  background: #315fe0;
   color: white;
-  font-size: 19px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 750;
 }
 
 .observacoes {
-  min-height: 28px;
+  min-height: 24px;
   color: #41485a;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.45;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .rodape {
-  margin-top: 34px;
-  padding-top: 15px;
-  border-top: 1px solid var(--borda);
-  color: var(--cinza);
-  font-size: 12px;
-  line-height: 1.5;
+  margin-top: 23px;
+  padding-top: 11px;
+  border-top: 1px solid #dce0e8;
+  color: #687083;
+  font-size: 11px;
+  line-height: 1.45;
   text-align: center;
 }
 
 @media (max-width: 600px) {
-  .painel,
-  .orcamento {
-    padding: 19px;
+  body {
+    padding: 16px 10px 30px;
+  }
+
+  .painel {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+
+  .topo-painel {
+    align-items: flex-start;
+  }
+
+  .indicador-status {
+    padding: 7px 9px;
+    font-size: 10px;
   }
 
   .campos {
     grid-template-columns: 1fr;
+    gap: 13px;
   }
 
   .campo-completo {
     grid-column: auto;
   }
 
-  .cabecalho-orcamento {
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .logo {
-    width: 130px;
-    height: 105px;
-    flex-basis: 130px;
-  }
-
-  .marca h2 {
-    font-size: 18px;
-  }
-
-  .dados-cliente {
-    grid-template-columns: 1fr;
-  }
-
   .servico {
-    grid-template-columns: 25px minmax(0, 1fr) 110px;
-    gap: 8px;
+    grid-template-columns: 24px minmax(0, 1fr) 105px;
+    gap: 7px;
   }
 
   .servico:has(> .duracao-vitrificador) {
-    grid-template-columns: 25px minmax(0, 1fr) 95px 105px;
-    gap: 6px;
+    grid-template-columns: 24px minmax(0, 1fr) 82px 95px;
+    gap: 5px;
   }
 
   .servico-opcao {
-    grid-template-columns: 25px minmax(0, 1fr) 110px;
-    gap: 8px;
+    grid-template-columns: 24px minmax(0, 1fr) 105px;
+    gap: 7px;
   }
 
   .opcoes-polimento-motor {
@@ -482,37 +543,81 @@ td {
   }
 
   .servico-nome {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .servico > .duracao-vitrificador {
-    padding: 9px 5px;
-    font-size: 13px;
+    padding: 9px 4px;
+    font-size: 12px;
+  }
+
+  .linha-personalizada {
+    grid-template-columns: 1fr 105px;
+    gap: 8px;
+  }
+
+  .botoes {
+    flex-direction: column;
+  }
+
+  .orcamento {
+    padding: 20px 15px;
+    border-radius: 14px;
+  }
+
+  .cabecalho-orcamento {
+    gap: 12px;
+  }
+
+  .logo {
+    width: 110px;
+    height: 85px;
+    flex-basis: 110px;
+  }
+
+  .marca h2 {
+    font-size: 17px;
+  }
+
+  .marca p {
+    font-size: 11px;
+  }
+
+  .dados-cliente {
+    grid-template-columns: 1fr;
   }
 
   .titulo-documento {
     align-items: flex-start;
     flex-direction: column;
+    gap: 6px;
   }
 
   .numero-data {
     text-align: left;
-  }
-
-  .botoes {
-    flex-direction: column;
   }
 }
 
 @media print {
   @page {
     size: A4;
-    margin: 14mm;
+    margin: 7mm;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+    color: #202536 !important;
   }
 
   body {
-    padding: 0;
-    background: white;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
@@ -522,34 +627,117 @@ td {
   }
 
   .app {
+    width: 100%;
     max-width: none;
+    margin: 0;
   }
 
   .orcamento {
+    width: 100%;
     padding: 0;
+    overflow: visible;
+    border: 0;
     border-radius: 0;
     box-shadow: none;
+    background: #fff !important;
+    color: #202536 !important;
+    font-size: 10px;
   }
 
   .cabecalho-orcamento {
-    gap: 22px;
-    padding-bottom: 24px;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom-width: 2px;
   }
 
   .logo {
-    width: 250px;
-    height: 190px;
-    flex: 0 0 250px;
+    width: 90px;
+    height: 65px;
+    flex: 0 0 90px;
     object-fit: contain;
-    background: transparent;
-  }
-
-  .marca {
-    min-width: 0;
   }
 
   .marca h2 {
-    font-size: 20px;
+    margin-bottom: 3px;
+    font-size: 15px;
+  }
+
+  .marca p {
+    margin: 2px 0;
+    font-size: 9px;
+  }
+
+  .titulo-documento {
+    align-items: center;
+    gap: 8px;
+    margin: 9px 0 7px;
+  }
+
+  .titulo-documento h1 {
+    font-size: 17px;
+  }
+
+  .numero-data {
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .secao-titulo {
+    margin: 9px 0 5px;
+    padding-bottom: 3px;
+    font-size: 9px;
+  }
+
+  .dados-cliente {
+    gap: 3px 12px;
+    font-size: 9px;
+  }
+
+  table {
+    font-size: 9px;
+  }
+
+  th {
+    padding: 5px 7px;
+    background: #f0f2fa !important;
+    color: #172b55 !important;
+  }
+
+  td {
+    padding: 4px 7px;
+  }
+
+  .totais {
+    width: 220px;
+    margin-top: 7px;
+  }
+
+  .total-final {
+    padding: 7px 9px;
+    background: #315fe0 !important;
+    color: #fff !important;
+    font-size: 14px;
+  }
+
+  .observacoes {
+    min-height: 0;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+
+  .rodape {
+    margin-top: 10px;
+    padding-top: 6px;
+    font-size: 8px;
+  }
+
+  .secao-titulo,
+  table,
+  .totais,
+  .rodape,
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .logo,
@@ -557,12 +745,5 @@ td {
   th {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-  }
-
-  .secao-titulo,
-  table,
-  .totais,
-  .rodape {
-    break-inside: avoid;
   }
 }

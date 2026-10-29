@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1120">
   <title>Gerador de Orçamentos | Esteticar Jãozin</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
@@ -10,7 +11,17 @@
 <body>
   <main class="app">
     <section class="painel">
-      <h1>Gerador de orçamento</h1>
+      <div class="topo-painel">
+        <div>
+          <span class="etiqueta">ESTETICAR JÃOZIN</span>
+          <h1>Gerador de orçamento</h1>
+        </div>
+        <div class="indicador-status" aria-label="Modo noturno ativo">
+          <span class="status-ponto"></span>
+          Modo noturno
+        </div>
+      </div>
+
       <p class="introducao">
         Preencha os dados, escolha o tipo e o porte do veículo, marque os
         serviços desejados e informe os valores quando necessário. Depois,
@@ -54,9 +65,9 @@
         </div>
       </div>
 
-      <h2>Marque os serviços e informe os valores</h2>
+      <h2>Serviços e valores</h2>
       <p class="dica-servicos">
-        Marque a caixa ao lado de cada serviço que deseja incluir no orçamento.
+        Marque os serviços que deseja incluir no orçamento e ajuste os valores, se necessário.
       </p>
 
       <div class="lista-servicos" id="listaServicos">
@@ -83,9 +94,7 @@
 
       <div class="botoes">
         <button class="botao-pdf" type="button" id="gerarPdf">Gerar PDF</button>
-        <button class="botao-limpar" type="button" id="limpar">
-          Limpar formulário
-        </button>
+        <button class="botao-limpar" type="button" id="limpar">Limpar formulário</button>
       </div>
     </section>
 
