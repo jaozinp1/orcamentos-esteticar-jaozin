@@ -6,12 +6,81 @@
   const listaServicos = document.getElementById("listaServicos");
 
   if (!botao || !status || !listaServicos) {
-    console.error("Não foi possível iniciar o recurso de voz: faltam elementos no HTML.");
+    console.error(
+      "Não foi possível iniciar o recurso de voz: faltam elementos no HTML."
+    );
     return;
   }
 
   const ReconhecimentoDeVoz =
     window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const substituicoesVitrificacao = [
+    [/\bcoating de pintura\b/gi, "Vitrificação de pintura"],
+    [/\bcoating de plásticos\b/gi, "Vitrificação de plásticos"],
+    [/\bcoating de plasticos\b/gi, "Vitrificação de plásticos"],
+    [/\bcoating de metais\b/gi, "Vitrificação de metais"],
+    [/\bcoating\b/gi, "Vitrificação"]
+  ];
+
+  function substituirCoating(texto) {
+    let resultado = texto;
+
+    substituicoesVitrificacao.forEach(([expressao, substituicao]) => {
+      resultado = resultado.replace(expressao, substituicao);
+    });
+
+    return resultado;
+  }
+
+  function atualizarNomesDeVitrificacao() {
+    listaServicos.querySelectorAll(".servico").forEach(linha => {
+      if (linha.dataset.nome) {
+        linha.dataset.nome = substituirCoating(linha.dataset.nome);
+      }
+
+      const labelPrincipal = linha.querySelector(
+        ":scope > label.servico-nome"
+      );
+
+      if (labelPrincipal) {
+        labelPrincipal.textContent = substituirCoating(
+          labelPrincipal.textContent
+        );
+      }
+
+      linha.querySelectorAll(".servico-opcao").forEach(linhaOpcao => {
+        if (linhaOpcao.dataset.nome) {
+          linhaOpcao.dataset.nome = substituirCoating(
+            linhaOpcao.dataset.nome
+          );
+        }
+
+        const labelOpcao = linhaOpcao.querySelector("label.servico-nome");
+
+        if (labelOpcao) {
+          labelOpcao.textContent = substituirCoating(
+            labelOpcao.textContent
+          );
+        }
+      });
+    });
+
+    listaServicos.querySelectorAll(".titulo-secao-servicos").forEach(titulo => {
+      titulo.textContent = substituirCoating(titulo.textContent);
+    });
+  }
+
+  atualizarNomesDeVitrificacao();
+
+  const observador = new MutationObserver(() => {
+    atualizarNomesDeVitrificacao();
+  });
+
+  observador.observe(listaServicos, {
+    childList: true,
+    subtree: true
+  });
 
   if (!ReconhecimentoDeVoz) {
     botao.disabled = true;
@@ -38,8 +107,10 @@
       .trim();
   }
 
-  function obterOpcoesDeServicoVisiveis() {
-    const resultado = [];
+  function obterServicosDisponiveis() {
+    atualizarNomesDeVitrificacao();
+
+    const servicos = [];
 
     listaServicos.querySelectorAll(".servico").forEach(linha => {
       const checkboxPrincipal = linha.querySelector(
@@ -49,12 +120,11 @@
       const nomePrincipal = linha.dataset.nome || "";
 
       if (checkboxPrincipal && nomePrincipal) {
-        resultado.push({
+        servicos.push({
           nome: nomePrincipal,
           nomeNormalizado: normalizar(nomePrincipal),
           checkbox: checkboxPrincipal,
-          checkboxPai: null,
-          linhaPai: linha
+          checkboxPai: null
         });
       }
 
@@ -65,36 +135,70 @@
 
         const nomeOpcao = linhaOpcao.dataset.nome || "";
 
-        if (!checkboxOpcao || !nomeOpcao) {
-          return;
+        if (checkboxOpcao && nomeOpcao) {
+          servicos.push({
+            nome: nomeOpcao,
+            nomeNormalizado: normalizar(nomeOpcao),
+            checkbox: checkboxOpcao,
+            checkboxPai: checkboxPrincipal
+          });
         }
-
-        resultado.push({
-          nome: nomeOpcao,
-          nomeNormalizado: normalizar(nomeOpcao),
-          checkbox: checkboxOpcao,
-          checkboxPai: checkboxPrincipal,
-          linhaPai: linha
-        });
       });
     });
 
-    return resultado;
+    return servicos;
   }
 
-  function localizarCorrespondencias(transcricao) {
-    const falaNormalizada = normalizar(transcricao);
+  function localizarServicos(transcricao) {
+    const fala = normalizar(transcricao);
+    const servicosDisponiveis = obterServicosDisponiveis();
+    const encontrados = [];
 
-    if (!falaNormalizada) {
-      return [];
+    servicosDisponiveis.forEach(servico => {
+      if (!servico.nomeNormalizado) {
+        return;
+      }
+
+      if (fala.includes(servico.nomeNormalizado)) {
+        encontrados.push(servico);
+      }
+    });
+
+    if (encontrados.length > 0) {
+      return encontrados;
     }
 
-    return obterOpcoesDeServicoVisiveis().filter(servico => {
-      return (
-        servico.nomeNormalizado.length > 0 &&
-        falaNormalizada.includes(servico.nomeNormalizado)
-      );
+    const termosFalados = fala
+      .split(/\s+(?:e|mais|tambem|também)\s+|,\s*/g)
+      .map(termo => termo.trim())
+      .filter(Boolean);
+
+    termosFalados.forEach(termo => {
+      const correspondencias = servicosDisponiveis.filter(servico => {
+        const palavrasServico = servico.nomeNormalizado
+          .split(" ")
+          .filter(palavra => palavra.length > 2);
+
+        if (palavrasServico.length === 0) {
+          return false;
+        }
+
+        const palavrasEncontradas = palavrasServico.filter(palavra =>
+          termo.includes(palavra)
+        );
+
+        return (
+          palavrasEncontradas.length >=
+          Math.min(2, palavrasServico.length)
+        );
+      });
+
+      if (correspondencias.length === 1) {
+        encontrados.push(correspondencias[0]);
+      }
     });
+
+    return [...new Set(encontrados)];
   }
 
   function selecionarServico(servico) {
@@ -113,19 +217,29 @@
     }
   }
 
-  function atualizarStatus(transcricao, correspondencias) {
-    const nomes = correspondencias.map(servico => servico.nome);
-    const mensagem =
-      `Ouvi: “${transcricao}”. Encontrei estes serviços:\n\n` +
-      nomes.join("\n") +
-      "\n\nDeseja adicioná-los ao orçamento?";
+  function processarTranscricao(transcricao) {
+    const servicosEncontrados = localizarServicos(transcricao);
 
-    if (!window.confirm(mensagem)) {
+    if (servicosEncontrados.length === 0) {
+      status.textContent =
+        `Ouvi: “${transcricao}”, mas não consegui identificar os serviços. ` +
+        "Tente falar os nomes dos serviços como aparecem na lista, separados por “e” ou por pausas.";
+      return;
+    }
+
+    const nomes = servicosEncontrados.map(servico => servico.nome);
+    const confirmacao = window.confirm(
+      `Ouvi: “${transcricao}”.\n\n` +
+      `Encontrei estes serviços:\n${nomes.join("\n")}\n\n` +
+      "Deseja adicioná-los ao orçamento?"
+    );
+
+    if (!confirmacao) {
       status.textContent = "Nenhum serviço foi alterado.";
       return;
     }
 
-    correspondencias.forEach(selecionarServico);
+    servicosEncontrados.forEach(selecionarServico);
 
     status.textContent =
       `Serviços adicionados: ${nomes.join(", ")}.`;
@@ -138,7 +252,8 @@
 
     reconhecimentoEmAndamento = true;
     botao.disabled = true;
-    status.textContent = "Ouvindo. Fale o nome dos serviços que deseja adicionar.";
+    status.textContent =
+      "Ouvindo. Fale todos os serviços que deseja adicionar, separados por “e” ou por pausas.";
 
     try {
       reconhecimento.start();
@@ -147,32 +262,26 @@
       botao.disabled = false;
       status.textContent =
         "Não foi possível iniciar o microfone. Aguarde um momento e tente novamente.";
-      console.error("Erro ao iniciar o reconhecimento de voz:", erro);
+      console.error(
+        "Erro ao iniciar o reconhecimento de voz:",
+        erro
+      );
     }
   });
 
   reconhecimento.addEventListener("result", evento => {
-    const resultados = evento.results[evento.resultIndex];
-    const transcricao = resultados && resultados[0]
-      ? resultados[0].transcript.trim()
+    const resultado = evento.results[evento.resultIndex];
+    const transcricao = resultado && resultado[0]
+      ? resultado[0].transcript.trim()
       : "";
 
     if (!transcricao) {
       status.textContent =
-        "Não consegui entender o que foi dito. Tente falar novamente.";
+        "Não consegui entender a fala. Tente novamente.";
       return;
     }
 
-    const correspondencias = localizarCorrespondencias(transcricao);
-
-    if (correspondencias.length === 0) {
-      status.textContent =
-        `Ouvi: “${transcricao}”, mas não encontrei um serviço correspondente ` +
-        "na lista exibida. Fale o nome do serviço como aparece no orçamento.";
-      return;
-    }
-
-    atualizarStatus(transcricao, correspondencias);
+    processarTranscricao(transcricao);
   });
 
   reconhecimento.addEventListener("error", evento => {
