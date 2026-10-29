@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerador de Orçamentos | Esteticar Jãozin</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="app">
+    <section class="painel">
+      <h1>Gerador de orçamento</h1>
+      <p class="introducao">
+        Preencha os dados, escolha o tipo e o porte do veículo, marque os
+        serviços desejados e informe os valores quando necessário. Depois,
+        clique em “Gerar PDF”.
+      </p>
+
+      <div class="campos">
+        <div>
+          <label class="titulo-campo" for="cliente">Nome do cliente</label>
+          <input id="cliente" type="text" placeholder="Nome do cliente">
+        </div>
+
+        <div>
+          <label class="titulo-campo" for="telefoneCliente">Telefone do cliente</label>
+          <input id="telefoneCliente" type="tel" placeholder="Telefone (opcional)">
+        </div>
+
+        <div>
+          <label class="titulo-campo" for="tipoVeiculo">Tipo de veículo</label>
+          <select id="tipoVeiculo">
+            <option value="">Selecione</option>
+            <option value="Moto">Moto</option>
+            <option value="Carro">Carro</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="titulo-campo" for="porteVeiculo">Porte do veículo</label>
+          <select id="porteVeiculo">
+            <option value="">Selecione</option>
+            <option value="Pequeno">Pequeno</option>
+            <option value="Médio">Médio</option>
+            <option value="Grande">Grande</option>
+          </select>
+        </div>
+
+        <div class="campo-completo">
+          <label class="titulo-campo" for="veiculo">Modelo do veículo (opcional)</label>
+          <input id="veiculo" type="text" placeholder="Ex.: Honda Civic">
+        </div>
+      </div>
+
+      <h2>Marque os serviços e informe os valores</h2>
+      <p class="dica-servicos">
+        Marque a caixa ao lado de cada serviço que deseja incluir no orçamento.
+      </p>
+
+      <div class="lista-servicos" id="listaServicos">
+        <p class="mensagem-inicial">Selecione o tipo de veículo para exibir os serviços.</p>
+      </div>
+
+      <div class="linha-personalizada">
+        <input id="novoServico" type="text" placeholder="Nome do serviço personalizado">
+        <input id="novoValor" type="number" min="0" step="0.01" placeholder="Valor R$">
+      </div>
+
+      <button class="botao-adicionar" type="button" id="adicionarServico">
+        + Adicionar serviço personalizado
+      </button>
+
+      <label class="titulo-campo observacoes-label" for="observacoes">
+        Observações (opcional)
+      </label>
+      <textarea
+        id="observacoes"
+        rows="3"
+        placeholder="Detalhes dos serviços ou condições de pagamento"
+      ></textarea>
+
+      <div class="botoes">
+        <button class="botao-pdf" type="button" id="gerarPdf">Gerar PDF</button>
+        <button class="botao-limpar" type="button" id="limpar">
+          Limpar formulário
+        </button>
+      </div>
+    </section>
+
+    <section class="orcamento" id="documento">
+      <header class="cabecalho-orcamento">
+        <img
+          class="logo"
+          src="IMG_5701.png"
+          alt="Logo Esteticar Jãozin"
+        >
+
+        <div class="marca">
+          <h2>Esteticar Jãozin</h2>
+          <p>Estética Automotiva</p>
+          <p>WhatsApp: (14) 99790-6475</p>
+          <p>Instagram: @esteticar_jaozin</p>
+        </div>
+      </header>
+
+      <div class="titulo-documento">
+        <h1>ORÇAMENTO</h1>
+        <div class="numero-data">
+          <div>Orçamento nº <span id="numeroOrcamento"></span></div>
+          <div>Emitido em <span id="dataEmissao"></span></div>
+        </div>
+      </div>
+
+      <div class="secao-titulo">Dados do cliente e veículo</div>
+
+      <div class="dados-cliente">
+        <div class="dado"><b>Cliente:</b> <span id="saidaCliente">—</span></div>
+        <div class="dado"><b>Telefone:</b> <span id="saidaTelefone">—</span></div>
+        <div class="dado"><b>Tipo de veículo:</b> <span id="saidaTipoVeiculo">—</span></div>
+        <div class="dado"><b>Porte:</b> <span id="saidaPorteVeiculo">—</span></div>
+        <div class="dado"><b>Modelo:</b> <span id="saidaVeiculo">—</span></div>
+      </div>
+
+      <div class="secao-titulo">Serviços orçados</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição do serviço</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaServicos"></tbody>
+      </table>
+
+      <div class="totais">
+        <div class="total-linha total-final">
+          <span>TOTAL</span>
+          <span id="saidaTotal">R$ 0,00</span>
+        </div>
+      </div>
+
+      <div class="secao-titulo">Observações</div>
+      <div class="observacoes" id="saidaObservacoes">
+        Nenhuma observação informada.
+      </div>
+
+      <footer class="rodape">
+        Obrigado pela preferência! Para aprovar este orçamento ou agendar um serviço,
+        entre em contato pelo WhatsApp (14) 99790-6475.
+      </footer>
+    </section>
+  </main>
+</body>
+</html>
