@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1120">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Gerador de Orçamentos | Esteticar Jãozin</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
+  <script src="voz.js" defer></script>
 </head>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <body>
   <main class="app">
     <section class="painel">
@@ -70,6 +71,15 @@
       <p class="dica-servicos">
         Marque os serviços que deseja incluir no orçamento e ajuste os valores, se necessário.
       </p>
+
+      <div class="controle-voz">
+        <button class="botao-adicionar" type="button" id="botaoVoz">
+          Adicionar serviços por voz
+        </button>
+        <p id="statusVoz" role="status" aria-live="polite">
+          Selecione o tipo de veículo e toque no botão para falar os serviços.
+        </p>
+      </div>
 
       <div class="lista-servicos" id="listaServicos">
         <p class="mensagem-inicial">Selecione o tipo de veículo para exibir os serviços.</p>
