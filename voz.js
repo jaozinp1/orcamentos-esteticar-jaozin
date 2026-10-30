@@ -6,57 +6,56 @@
   const listaServicos = document.getElementById("listaServicos");
 
   if (!botao || !status || !listaServicos) {
-    console.error("Não foi possível iniciar a função de voz: elementos do HTML não encontrados.");
+    console.error(
+      "Função de voz: confira se o HTML contém os elementos botaoVoz, statusVoz e listaServicos."
+    );
     return;
   }
 
-  const ReconhecimentoDeVoz =
+  const Reconhecimento =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  if (!ReconhecimentoDeVoz) {
+  if (!Reconhecimento) {
     botao.disabled = true;
     status.textContent =
-      "O reconhecimento de voz não é compatível com este navegador. Tente usar o Chrome atualizado.";
+      "O reconhecimento de voz não está disponível neste navegador. Tente pelo Chrome atualizado.";
     return;
   }
 
-  const reconhecimento = new ReconhecimentoDeVoz();
+  const reconhecimento = new Reconhecimento();
   reconhecimento.lang = "pt-BR";
   reconhecimento.continuous = false;
   reconhecimento.interimResults = false;
   reconhecimento.maxAlternatives = 3;
 
-  let reconhecimentoEmAndamento = false;
+  let ouvindo = false;
 
   function normalizar(texto) {
-    return texto
+    return String(texto || "")
       .toLocaleLowerCase("pt-BR")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\bcoating\b/g, "vitrificacao")
       .replace(/[^\p{L}\p{N}\s]/gu, " ")
       .replace(/\s+/g, " ")
       .trim();
   }
 
+  function obterNomeDaLinha(linha) {
+    const label = linha.querySelector(":scope > label.servico-nome");
+    return linha.dataset.nome || (label ? label.textContent.trim() : "");
+  }
+
   function obterServicosDisponiveis() {
-    const servicos = [];
+    const disponiveis = [];
 
     listaServicos.querySelectorAll(".servico").forEach(linha => {
       const checkboxPrincipal = linha.querySelector(
         ":scope > .checkbox-servico"
       );
-
-      const labelPrincipal = linha.querySelector(
-        ":scope > label.servico-nome"
-      );
-
-      const nomePrincipal =
-        linha.dataset.nome ||
-        (labelPrincipal ? labelPrincipal.textContent.trim() : "");
+      const nomePrincipal = obterNomeDaLinha(linha);
 
       if (checkboxPrincipal && nomePrincipal) {
-        servicos.push({
+        disponiveis.push({
           nome: nomePrincipal,
           nomeNormalizado: normalizar(nomePrincipal),
           checkbox: checkboxPrincipal,
@@ -68,15 +67,13 @@
         const checkboxOpcao = linhaOpcao.querySelector(
           ".checkbox-opcao-servico"
         );
-
         const labelOpcao = linhaOpcao.querySelector("label.servico-nome");
-
         const nomeOpcao =
           linhaOpcao.dataset.nome ||
           (labelOpcao ? labelOpcao.textContent.trim() : "");
 
         if (checkboxOpcao && nomeOpcao) {
-          servicos.push({
+          disponiveis.push({
             nome: nomeOpcao,
             nomeNormalizado: normalizar(nomeOpcao),
             checkbox: checkboxOpcao,
@@ -86,55 +83,75 @@
       });
     });
 
-    return servicos;
+    return disponiveis;
+  }
+
+  function correspondeVitrificacao(fala, nomeServico) {
+    const nome = normalizar(nomeServico);
+
+    if (!nome.includes("vitrificacao")) {
+      return false;
+    }
+
+    const falaTemVitrificacao =
+      /\bvitrifica(?:cao|cao|r)?\b/.test(fala) ||
+      /\bvitrifica\b/.test(fala) ||
+      /\bvitrificacao\b/.test(fala);
+
+    if (!falaTemVitrificacao) {
+      return false;
+    }
+
+    if (nome.includes("pintura")) {
+      return /\bpintura\b/.test(fala);
+    }
+
+    if (nome.includes("plasticos")) {
+      return /\bplasticos?\b/.test(fala);
+    }
+
+    if (nome.includes("metais")) {
+      return /\bmetais?\b/.test(fala);
+    }
+
+    return fala.includes(nome);
+  }
+
+  function correspondeServico(fala, servico) {
+    if (correspondeVitrificacao(fala, servico.nome)) {
+      return true;
+    }
+
+    if (fala.includes(servico.nomeNormalizado)) {
+      return true;
+    }
+
+    const nome = servico.nomeNormalizado;
+
+    // Aceita "vitrifica pintura/plástico/metais" mesmo que a transcrição
+    // não reconheça corretamente a palavra "vitrificação".
+    if (nome.includes("vitrificacao")) {
+      return correspondeVitrificacao(fala, servico.nome);
+    }
+
+    return false;
   }
 
   function localizarServicos(transcricao) {
     const fala = normalizar(transcricao);
     const disponiveis = obterServicosDisponiveis();
-    const encontrados = new Set();
+    const encontrados = [];
 
     disponiveis.forEach(servico => {
       if (
-        servico.nomeNormalizado &&
-        fala.includes(servico.nomeNormalizado)
+        correspondeServico(fala, servico) &&
+        !encontrados.some(item => item.checkbox === servico.checkbox)
       ) {
-        encontrados.add(servico);
+        encontrados.push(servico);
       }
     });
 
-    if (encontrados.size > 0) {
-      return [...encontrados];
-    }
-
-    const partesFaladas = fala
-      .split(/\b(?:e|mais|tambem)\b|,/)
-      .map(parte => parte.trim())
-      .filter(Boolean);
-
-    partesFaladas.forEach(parte => {
-      const correspondencias = disponiveis.filter(servico => {
-        const palavras = servico.nomeNormalizado
-          .split(" ")
-          .filter(palavra => palavra.length > 2);
-
-        if (palavras.length === 0) {
-          return false;
-        }
-
-        const palavrasEncontradas = palavras.filter(palavra =>
-          parte.includes(palavra)
-        );
-
-        return palavrasEncontradas.length >= Math.min(2, palavras.length);
-      });
-
-      if (correspondencias.length === 1) {
-        encontrados.add(correspondencias[0]);
-      }
-    });
-
-    return [...encontrados];
+    return encontrados;
   }
 
   function marcarServico(servico) {
@@ -158,16 +175,16 @@
 
     if (encontrados.length === 0) {
       status.textContent =
-        `Ouvi: “${transcricao}”, mas não identifiquei os serviços. ` +
-        "Tente falar os nomes como aparecem na lista, separados por “e”.";
+        `Ouvi: “${transcricao}”, mas não encontrei esse serviço na lista. ` +
+        "Selecione primeiro Moto ou Carro e tente dizer o nome do serviço.";
       return;
     }
 
     const nomes = encontrados.map(servico => servico.nome);
     const confirmou = window.confirm(
       `Ouvi: “${transcricao}”.\n\n` +
-      `Serviços identificados:\n${nomes.join("\n")}\n\n` +
-      "Deseja adicioná-los ao orçamento?"
+        `Serviços identificados:\n${nomes.join("\n")}\n\n` +
+        "Deseja adicioná-los ao orçamento?"
     );
 
     if (!confirmou) {
@@ -180,30 +197,28 @@
   }
 
   botao.addEventListener("click", () => {
-    if (reconhecimentoEmAndamento) {
-      return;
-    }
+    if (ouvindo) return;
 
-    reconhecimentoEmAndamento = true;
+    ouvindo = true;
     botao.disabled = true;
     status.textContent =
-      "Ouvindo. Fale os serviços que deseja adicionar, separados por “e”.";
+      "Ouvindo. Diga um ou mais serviços, por exemplo: “vitrifica pintura e vitrifica plásticos”.";
 
     try {
       reconhecimento.start();
     } catch (erro) {
-      reconhecimentoEmAndamento = false;
+      ouvindo = false;
       botao.disabled = false;
       status.textContent =
-        "Não foi possível iniciar o microfone. Aguarde um momento e tente novamente.";
+        "Não consegui iniciar o microfone. Aguarde um instante e tente novamente.";
       console.error("Erro ao iniciar o reconhecimento de voz:", erro);
     }
   });
 
   reconhecimento.addEventListener("result", evento => {
-    const resultado = evento.results[evento.resultIndex];
+    const resultados = evento.results[evento.resultIndex];
     const transcricao =
-      resultado && resultado[0] ? resultado[0].transcript.trim() : "";
+      resultados && resultados[0] ? resultados[0].transcript.trim() : "";
 
     if (!transcricao) {
       status.textContent = "Não consegui entender. Tente falar novamente.";
@@ -216,24 +231,24 @@
   reconhecimento.addEventListener("error", evento => {
     const mensagens = {
       "not-allowed":
-        "O acesso ao microfone foi negado. Permita o uso do microfone nas configurações do navegador.",
+        "O acesso ao microfone foi bloqueado. Permita o uso do microfone nas configurações do navegador.",
       "service-not-allowed":
-        "O navegador não permitiu o uso do reconhecimento de voz.",
+        "O navegador não permitiu iniciar o reconhecimento de voz.",
       "no-speech":
         "Não detectei fala. Tente novamente, falando perto do microfone.",
       "audio-capture":
-        "Não encontrei um microfone disponível neste aparelho.",
+        "Não encontrei um microfone disponível.",
       network:
         "O reconhecimento de voz falhou por um problema de conexão."
     };
 
     status.textContent =
       mensagens[evento.error] ||
-      `O reconhecimento de voz não funcionou (${evento.error}).`;
+      `O reconhecimento de voz falhou (${evento.error}).`;
   });
 
   reconhecimento.addEventListener("end", () => {
-    reconhecimentoEmAndamento = false;
+    ouvindo = false;
     botao.disabled = false;
   });
 })();
