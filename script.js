@@ -40,11 +40,11 @@ const catalogos = {
       ]
     },
     {
-      secao: "Coating e proteção",
+      secao: "Vitrificação e proteção",
       servicos: [
         { nome: "Cera líquida", valor: 10 },
-        { nome: "Coating de pintura", vitrificadoresCarro: true },
-        { nome: "Coating de plásticos", valor: "" },
+        { nome: "Vitrificação de pintura", vitrificadoresCarro: true },
+        { nome: "Vitrificação de plásticos", valor: "" },
         { nome: "Enceramento premium em pasta", valor: 80 },
         { nome: "Selagem da pintura", valor: 80 },
         { nome: "Selagem de plásticos", valor: 80 },
@@ -150,17 +150,17 @@ const catalogos = {
       ]
     },
     {
-      secao: "Coating e proteção",
+      secao: "Vitrificação e proteção",
       servicos: [
         {
-          nome: "Coating de pintura",
+          nome: "Vitrificação de pintura",
           vitrificadoresMoto: { "2 anos": 150, "5 anos": 270 }
         },
         {
-          nome: "Coating de plásticos",
+          nome: "Vitrificação de plásticos",
           vitrificadoresMoto: { "2 anos": 120, "5 anos": 240 }
         },
-        { nome: "Coating de metais", valor: 100 },
+        { nome: "Vitrificação de metais", valor: 100 },
         { nome: "Selagem da pintura", valor: 30 },
         { nome: "Selagem de plásticos", valor: 30 },
         { nome: "Cera líquida", valor: 10 },
@@ -456,9 +456,8 @@ function carregarServicos() {
   } else {
     tiposParaMostrar.forEach(tipo => {
       catalogos[tipo].forEach(secao => {
-        const titulo = escolha === "Outro"
-          ? `${tipo} — ${secao.secao}`
-          : secao.secao;
+        const titulo =
+          escolha === "Outro" ? `${tipo} — ${secao.secao}` : secao.secao;
 
         criarTituloSecao(titulo);
         secao.servicos.forEach(servico => criarLinhaServico(servico));
@@ -566,8 +565,9 @@ function atualizarOrcamento() {
       return;
     }
 
-    const seletorDuracao =
-      linha.querySelector(":scope > .duracao-vitrificador");
+    const seletorDuracao = linha.querySelector(
+      ":scope > .duracao-vitrificador"
+    );
 
     const campoValor = linha.querySelector(":scope > .valor-servico");
     const valor = campoValor ? Number(campoValor.value) || 0 : 0;
@@ -633,10 +633,12 @@ document.getElementById("adicionarServico").addEventListener("click", () => {
 
 document.getElementById("gerarPdf").addEventListener("click", () => {
   const algumSelecionado =
-    [...document.querySelectorAll(".checkbox-servico")]
-      .some(checkbox => checkbox.checked) ||
-    [...document.querySelectorAll(".checkbox-opcao-servico")]
-      .some(checkbox => checkbox.checked);
+    [...document.querySelectorAll(".checkbox-servico")].some(
+      checkbox => checkbox.checked
+    ) ||
+    [...document.querySelectorAll(".checkbox-opcao-servico")].some(
+      checkbox => checkbox.checked
+    );
 
   if (!algumSelecionado) {
     alert("Marque pelo menos um serviço antes de gerar o PDF.");
