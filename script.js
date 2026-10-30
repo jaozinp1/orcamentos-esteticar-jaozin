@@ -36,7 +36,8 @@ const catalogos = {
         {
           nome: "Revitalização de pintura",
           precos: { Pequeno: 130, Médio: 180, Grande: 230 }
-        }
+        },
+        { nome: "Descontaminação de pintura", valor: 50 }
       ]
     },
     {
@@ -139,6 +140,10 @@ const catalogos = {
           }
         },
         {
+          nome: "Descontaminação de pintura",
+          valor: 20
+        },
+        {
           nome: "Polimento de motor",
           opcoes: [
             { nome: "Tampa coração", valor: 70 },
@@ -154,13 +159,16 @@ const catalogos = {
       servicos: [
         {
           nome: "Vitrificação de pintura",
-          vitrificadoresMoto: { "2 anos": 150, "5 anos": 270 }
+          vitrificadoresMoto: { "2 anos": 150, "5 anos": 150 }
         },
         {
           nome: "Vitrificação de plásticos",
-          vitrificadoresMoto: { "2 anos": 120, "5 anos": 240 }
+          vitrificadoresMoto: { "2 anos": 150, "5 anos": 150 }
         },
-        { nome: "Vitrificação de metais", valor: 100 },
+        {
+          nome: "Vitrificação de metais",
+          vitrificadoresMoto: { "2 anos": 150, "5 anos": 350 }
+        },
         { nome: "Selagem da pintura", valor: 30 },
         { nome: "Selagem de plásticos", valor: 30 },
         { nome: "Cera líquida", valor: 10 },
@@ -223,6 +231,18 @@ function obterPrecoVitrificadorCarro(duracao) {
   return precos[duracao]?.[campoPorteVeiculo.value] ?? "";
 }
 
+function obterPrecoVitrificacao(servico, duracao) {
+  if (servico.vitrificadoresMoto) {
+    return servico.vitrificadoresMoto[duracao] ?? "";
+  }
+
+  if (servico.vitrificadoresCarro) {
+    return obterPrecoVitrificadorCarro(duracao);
+  }
+
+  return "";
+}
+
 function criarTituloSecao(texto) {
   const titulo = document.createElement("h3");
   titulo.className = "titulo-secao-servicos";
@@ -264,18 +284,6 @@ function criarSeletorDuracao(servico, id) {
 
   seletorDuracao.id = `${id}-duracao`;
   return seletorDuracao;
-}
-
-function obterPrecoCoating(servico, duracao) {
-  if (servico.vitrificadoresMoto) {
-    return servico.vitrificadoresMoto[duracao] ?? "";
-  }
-
-  if (servico.vitrificadoresCarro) {
-    return obterPrecoVitrificadorCarro(duracao);
-  }
-
-  return "";
 }
 
 function criarLinhaOpcao(servico, id) {
@@ -353,17 +361,23 @@ function criarLinhaServico(servico, opcoes = {}) {
     const seletorDuracao = criarSeletorDuracao(servico, id);
     const campoValor = criarCampoValor(
       servico.nome,
-      obterPrecoCoating(servico, seletorDuracao.value)
+      obterPrecoVitrificacao(servico, seletorDuracao.value)
     );
 
     seletorDuracao.addEventListener("change", () => {
-      campoValor.value = obterPrecoCoating(servico, seletorDuracao.value);
+      campoValor.value = obterPrecoVitrificacao(
+        servico,
+        seletorDuracao.value
+      );
       atualizarOrcamento();
     });
 
     if (servico.vitrificadoresCarro) {
       campoPorteVeiculo.addEventListener("change", () => {
-        campoValor.value = obterPrecoCoating(servico, seletorDuracao.value);
+        campoValor.value = obterPrecoVitrificacao(
+          servico,
+          seletorDuracao.value
+        );
         atualizarOrcamento();
       });
     }
@@ -383,9 +397,11 @@ function criarLinhaServico(servico, opcoes = {}) {
       listaOpcoes.hidden = !checkbox.checked;
 
       if (!checkbox.checked) {
-        listaOpcoes.querySelectorAll(".checkbox-opcao-servico").forEach(item => {
-          item.checked = false;
-        });
+        listaOpcoes
+          .querySelectorAll(".checkbox-opcao-servico")
+          .forEach(item => {
+            item.checked = false;
+          });
       }
 
       atualizarOrcamento();
@@ -426,10 +442,16 @@ function salvarServicosPersonalizadosVisiveis() {
 
       if (!servico) return;
 
-      servico.selecionado =
-        linha.querySelector(":scope > .checkbox-servico").checked;
+      const checkbox = linha.querySelector(
+        ":scope > .checkbox-servico"
+      );
 
-      const campoValor = linha.querySelector(":scope > .valor-servico");
+      servico.selecionado = checkbox ? checkbox.checked : false;
+
+      const campoValor = linha.querySelector(
+        ":scope > .valor-servico"
+      );
+
       servico.valor = campoValor ? campoValor.value : "";
     });
 }
@@ -521,7 +543,10 @@ function atualizarOrcamento() {
   }
 
   listaServicos.querySelectorAll(".servico").forEach(linha => {
-    const checkbox = linha.querySelector(":scope > .checkbox-servico");
+    const checkbox = linha.querySelector(
+      ":scope > .checkbox-servico"
+    );
+
     if (!checkbox) return;
 
     if (linha.dataset.personalizado === "true") {
@@ -532,8 +557,9 @@ function atualizarOrcamento() {
       if (servico) {
         servico.selecionado = checkbox.checked;
 
-        const campoValorPersonalizado =
-          linha.querySelector(":scope > .valor-servico");
+        const campoValorPersonalizado = linha.querySelector(
+          ":scope > .valor-servico"
+        );
 
         servico.valor = campoValorPersonalizado
           ? campoValorPersonalizado.value
@@ -550,13 +576,16 @@ function atualizarOrcamento() {
     if (menus.length > 0) {
       menus.forEach(menu => {
         menu.querySelectorAll(".servico-opcao").forEach(linhaOpcao => {
-          const checkboxOpcao =
-            linhaOpcao.querySelector(".checkbox-opcao-servico");
+          const checkboxOpcao = linhaOpcao.querySelector(
+            ".checkbox-opcao-servico"
+          );
 
           if (!checkboxOpcao || !checkboxOpcao.checked) return;
 
           const campoValor = linhaOpcao.querySelector(".valor-servico");
-          const valor = campoValor ? Number(campoValor.value) || 0 : 0;
+          const valor = campoValor
+            ? Number(campoValor.value) || 0
+            : 0;
 
           adicionarLinhaNaTabela(linhaOpcao.dataset.nome, valor);
         });
@@ -569,7 +598,9 @@ function atualizarOrcamento() {
       ":scope > .duracao-vitrificador"
     );
 
-    const campoValor = linha.querySelector(":scope > .valor-servico");
+    const campoValor = linha.querySelector(
+      ":scope > .valor-servico"
+    );
     const valor = campoValor ? Number(campoValor.value) || 0 : 0;
 
     if (seletorDuracao) {
@@ -595,7 +626,8 @@ function atualizarOrcamento() {
     tabela.appendChild(linhaTabela);
   }
 
-  document.getElementById("saidaTotal").textContent = formatarMoeda(total);
+  document.getElementById("saidaTotal").textContent =
+    formatarMoeda(total);
 }
 
 campoTipoVeiculo.addEventListener("change", carregarServicos);
