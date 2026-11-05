@@ -208,7 +208,7 @@ const catalogos = {
       secao: "Limpezas específicas",
       servicos: [
         { nome: "Limpeza dos protetores de corrente", valor: 40 },
-        { nome: "Limpeza sob o banco + verniz", valor: 40 }
+        { nome: "Limpeza de baixo do banco + verniz de motor", valor: 40 }
       ]
     }
   ]
