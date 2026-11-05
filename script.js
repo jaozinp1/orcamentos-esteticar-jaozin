@@ -203,6 +203,13 @@ const catalogos = {
         { nome: "Clareamento dos bacalhaus", valor: 20 },
         { nome: "Amenização de ferrugem", valor: 50 }
       ]
+    },
+    {
+      secao: "Limpezas específicas",
+      servicos: [
+        { nome: "Limpeza dos protetores de corrente", valor: 40 },
+        { nome: "Limpeza sob o banco + verniz", valor: 40 }
+      ]
     }
   ]
 };
